@@ -351,18 +351,18 @@
     <!-- Header -->
     <div class="header">
         <h1 class="title">Rose Day Shower for You 🌹</h1>
-        <p class="subtitle">Click the special lavender roses to reveal my messages in order</p>
+        <p class="subtitle">Click the special lavender to reveal my messages in order</p>
     </div>
 
     <!-- Statistics -->
     <div class="stats-container">
         <div class="stats">
             <div class="stat">
-                <div class="stat-value" id="lavender-roses-found">0</div>
+                <div class="stat-value" id="lavender-found">0</div>
                 <div class="stat-label">Messages</div>
             </div>
             <div class="stat">
-                <div class="stat-value" id="lavender-roses-total">7</div>
+                <div class="stat-value" id="lavender-total">7</div>
                 <div class="stat-label">Total</div>
             </div>
         </div>
@@ -381,7 +381,7 @@
     <!-- Instructions -->
     <div class="instructions">
         <div class="instruction-text">
-            Tap on the <span class="lavender-hint">lavender roses</span> as they fall to read my messages in order
+            Tap on the <span class="lavender-hint">lavender</span> as they fall to read my messages in order
         </div>
     </div>
 
@@ -448,9 +448,9 @@
             redRoseDensity: 0.00015,
             redRoseSize: { min: 0.04, max: 0.08 },
             
-            // Lavender Rose Settings
-            lavenderRoseCount: 7,
-            lavenderRoseSize: { min: 0.06, max: 0.10 },
+            // Lavender Settings
+            lavenderCount: 7,
+            lavenderSize: { min: 0.06, max: 0.10 },
             
             // Animation Settings
             speed: { min: 0.5, max: 2.5 },
@@ -458,7 +458,7 @@
             wobbleAmount: { min: 0.5, max: 2.0 },
             wobbleSpeed: { min: 0.02, max: 0.05 },
             
-            // Lavender Rose Spawn - SLOWER with gaps
+            // Lavender Spawn - SLOWER with gaps
             spawnInterval: { min: 4000, max: 7000 },
             gapBetweenLavenders: 1500,
             maxConcurrentLavenders: 2,
@@ -469,7 +469,7 @@
         // ============================================
         const IMAGE_PATHS = {
             redRose: 'images/red-rose.png',
-            lavenderRose: 'images/brown-rose.png'
+            lavender: 'images/brown-rose.png'
         };
 
         // ============================================
@@ -478,37 +478,37 @@
         const MESSAGES = [
             {
                 title: "First Thought of the Day",
-                content: "Every morning when I wake up, the first thing I think about is you. Even miles apart, you're the sunrise that colors my day..."
+                content: "You my darling angel princess, you are my very thought of every morning. you are the first person that comes to my mind when i wake up, you are the first person i pray for, you are the first person i wish a good morning, you are the morning sunshine of my life. You are my day, you are my morning. you are my sunrise you are my sunshine!!"
             },
             {
                 title: "Your Smile",
-                content: "I miss your smile more than you can imagine. It's the most beautiful curve that sets everything straight in my world..."
+                content: "Your smile is just as sweet as the fragrance of these pretty flowers. your lips as pretty as these rose petals. your breath as aromatic as these lavenders. Your smile your giggles are like a morning freshner for me... it fill my heart with all the excitement and energy!"
             },
             {
                 title: "Distance Means So Little",
-                content: "They say distance means so little when someone means so much. You've proven that to be true. Every mile between us just makes my heart grow fonder..."
+                content: "Though we are separated by 1000s of miles, this distance still feels nothing when i am talking to you, when i am looking at you.. it always feels like you are right next to me, i always feel you around, laughing and joking, jumping and dancing, singing and vibing, a little crazy and a little baby. This distance will end too, and then one day i can really gift you all the flowers not brought as a bouquet but hand picked, i dont mind a thorn to my finger if i see you put the flower to your head, making a sweet little flower crown"
             },
             {
                 title: "My Favorite Sound",
-                content: "Your laughter is my favorite melody. Even through video calls, it brightens my darkest days. I save every voice note you send..."
+                content: "just like your smile and giggles, your voice, your laugh, your baby voice... all of it is soothing to my ears, like a healing potion.. i love to listen to you.. can be a song can be yap yap can be anything. you will forever find me looking in your eyes listening to you as if thats the best thing i can do in my life, and trust me.. i am proud of it."
             },
             {
                 title: "Dreaming of You",
-                content: "Last night I dreamt we were walking together in a rose garden, hand in hand. Even in my dreams, being with you feels like home..."
+                content: "People dream at night, some in the morning and afternoon. life with you feels like a forever dream i would never want to wake up from. life feels so perfect so magical like a dream. i dont dream of you just at night while sleeping but i dream of you with eyes wide open. i see you sitting next to me, i see you explaining me things, i see you dance, i see you sing, i see you kiss me, i see you everywhere everytime... like a dream that came true :))"
             },
             {
                 title: "You Make Me Better",
-                content: "Being with you, even virtually, makes me want to be a better person. Your love inspires me, your patience teaches me..."
+                content: "Remember i called you my better half, you are like a big puzzle piece of my life, that just completed it without me asking for it... you just rushed in my life and sat to that spot and i the dummy couldnt even realise how you completed the missing me. With you i grow everyday, i become a better person, i feel a better person. with you i love to be good. You not only complete me, you encourage and help me to be better."
             },
             {
-                title: "My Forever Promise",
-                content: "No matter the distance or time, I promise to always choose you. To love you through the screens and across the miles..."
+                title: "Life With You",
+                content: "Life with you feels pleasing, life with you feels full of who loves who more, life with you feels like an advernture, life with you feels a little cheeky, life with you feels a little badbunny song, life with you feels real, life with you feels worth living, life with you feels moving, life with you feels making sense, life with you feels magical, life with you feels complete."
             }
         ];
 
         const FINAL_MESSAGE = {
             title: "All Messages Found! 🌹",
-            content: `My dearest love,<br><br>
+            content: `My Darling Princess,<br><br>
             
             You've found all 7 of my messages, and with them, pieces of my heart that are always with you.<br><br>
             
@@ -516,30 +516,32 @@
             • A reason why I love you<br>
             • A memory I cherish<br>
             • A dream for our future<br>
-            • A promise I keep<br><br>
+            • A Life with you<br><br>
             
-            Even though we're apart on this Rose Day, know that my love for you grows stronger with each passing day.<br><br>
+            Though we got a huge distance separating us this rose day, i hope one of these days i can be with you, shower you with all the roses and flowers and gifts, make all the love to you, take you on dates, take you shopping, take you on adventures and just cherish life with you, and forever after!. distance is a factor we cant control yet but one day we will be able to do so... and then tadaaaaaaaaa there is no stopping me!!!!!!<br><br>
             
-            This virtual rose shower may end, but my love for you is eternal and ever-growing.<br><br>
+            This rose shower with lavender is like 0.00000000000000000000000000000000000000000000000000000000000000000000000000000001 of what all i want to do with you for you (also in you) because hey hey hey, how can i pour all of it in couple of virtual flowers? totally not... but this virtual flower thingy had to end but my love for you will never... i will love you forever and ever and more and more and a lot and a lot and and and.<br><br>
             
-            Forever yours...`
+            Thank you for choosing me, thank you for staying with me, thank you for being mine, thank you for making my life amazing. You are such a wonderful person with such a pretty heart and body and soul. you make me feel loved and seen and heard. And i hope i can make you feel seen and loved and heard forever. I will forever keep putting more and more efforts because hey i can never say i am enough, i am not because what you do for me is a lot, is never limited for me to have a limit. You deserve the world full of life and joy and adventure and i am honoured to have this moment with you where i can take you on adventures and show you efforts and get to love you because loving you is the best part of my life and i love to love you!!
+            
+            Forever yours..... And only Yours!`
         };
 
         // ============================================
         // GLOBAL VARIABLES
-        // ============================================
+        // ========Even====================================
         let canvas, ctx;
-        let redRoseImage, lavenderRoseImage;
+        let redRoseImage, lavenderImage;
         let roses = [];
         let nextMessageIndex = 0;
-        let lavenderRosesActive = 0;
-        let lavenderRosesSpawned = 0;
+        let lavenderActive = 0;
+        let lavenderSpawned = 0;
         let isGameActive = true;
         let animationId = null;
         let spawnTimer = null;
         let isSpawningLavender = false;
-        let allMessagesFound = false; // NEW: Track if all messages are found
-        let finalMessageReady = false; // NEW: Track if final message should show
+        let allMessagesFound = false;
+        let finalMessageReady = false;
         
         // Audio variables
         let audio1 = document.getElementById('audio-1');
@@ -549,49 +551,68 @@
         let isAudio2Playing = false;
 
         // ============================================
-        // AUDIO MANAGEMENT
+        // AUDIO MANAGEMENT WITH OPTIMIZATIONS
         // ============================================
+        const AUDIO_CONFIG = {
+            audio1: {
+                startTime: 0,
+                volume: 0.5,
+                loop: true
+            },
+            audio2: {
+                startTime: 0, // Audio 2 starts from beginning
+                volume: 0.6,
+                loop: true
+            }
+        };
+
         function initializeAudio() {
             // Set audio properties
-            audio1.loop = true;
-            audio2.loop = true;
+            audio1.loop = AUDIO_CONFIG.audio1.loop;
+            audio2.loop = AUDIO_CONFIG.audio2.loop;
             
             // Set volume
-            audio1.volume = 0.5;
-            audio2.volume = 0.5;
+            audio1.volume = AUDIO_CONFIG.audio1.volume;
+            audio2.volume = AUDIO_CONFIG.audio2.volume;
             
             // Start audio 1 automatically when game starts
             setTimeout(() => {
-                if (!isMuted) {
+                if (!isMuted && audio1.readyState >= 3) {
+                    audio1.currentTime = AUDIO_CONFIG.audio1.startTime;
                     audio1.play().catch(e => console.log("Audio play failed:", e));
                     isAudio1Playing = true;
                     updateMusicButtons();
                 }
-            }, 1000);
+            }, 1500);
             
             // Setup audio event listeners
             audio1.addEventListener('ended', function() {
                 if (allMessagesFound) {
-                    // Don't restart if all messages are found
                     audio1.pause();
                     isAudio1Playing = false;
                 } else {
-                    // Loop audio 1
-                    audio1.currentTime = 0;
+                    audio1.currentTime = AUDIO_CONFIG.audio1.startTime;
                     audio1.play();
                 }
             });
             
             audio2.addEventListener('ended', function() {
                 if (!allMessagesFound) {
-                    // Stop audio 2 if game restarted
                     audio2.pause();
                     isAudio2Playing = false;
                 } else {
-                    // Loop audio 2
-                    audio2.currentTime = 0;
+                    audio2.currentTime = AUDIO_CONFIG.audio2.startTime;
                     audio2.play();
                 }
+            });
+            
+            // Background loading indicator
+            audio1.addEventListener('canplaythrough', () => {
+                console.log("Audio 1 loaded and ready");
+            });
+            
+            audio2.addEventListener('canplaythrough', () => {
+                console.log("Audio 2 loaded and ready");
             });
         }
 
@@ -608,8 +629,8 @@
                 muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
                 if (isAudio1Playing || isAudio2Playing) {
                     toggleBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-                    audio1.volume = 0.5;
-                    audio2.volume = 0.5;
+                    audio1.volume = AUDIO_CONFIG.audio1.volume;
+                    audio2.volume = AUDIO_CONFIG.audio2.volume;
                 } else {
                     toggleBtn.innerHTML = '<i class="fas fa-volume-off"></i>';
                 }
@@ -619,8 +640,8 @@
         function toggleMusic() {
             if (isMuted) {
                 isMuted = false;
-                if (isAudio1Playing) audio1.play();
-                if (isAudio2Playing) audio2.play();
+                if (isAudio1Playing && audio1.readyState >= 3) audio1.play();
+                if (isAudio2Playing && audio2.readyState >= 3) audio2.play();
             } else {
                 isMuted = true;
                 audio1.pause();
@@ -635,14 +656,14 @@
                 audio1.pause();
                 audio2.pause();
             } else {
-                if (isAudio1Playing) audio1.play();
-                if (isAudio2Playing) audio2.play();
+                if (isAudio1Playing && audio1.readyState >= 3) audio1.play();
+                if (isAudio2Playing && audio2.readyState >= 3) audio2.play();
             }
             updateMusicButtons();
         }
 
         // ============================================
-        // IMAGE LOADER
+        // IMAGE LOADER WITH PROGRESS
         // ============================================
         class ImageLoader {
             constructor() {
@@ -692,11 +713,11 @@
                 tempCanvas.height = size;
                 const tempCtx = tempCanvas.getContext('2d');
                 
-                // Draw a simple rose shape
+                // Draw a simple shape
                 if (name === 'redRose') {
                     tempCtx.fillStyle = '#FF3366';
                 } else {
-                    tempCtx.fillStyle = '#967bb6';
+                    tempCtx.fillStyle = '#967bb6'; // Lavender color
                 }
                 
                 // Draw petals
@@ -728,7 +749,7 @@
                 const loadingText = document.getElementById('loading-text');
                 if (loadingText) {
                     const progress = Math.round((this.loaded / this.total) * 100);
-                    loadingText.textContent = `Loading roses... ${progress}%`;
+                    loadingText.textContent = `Loading garden... ${progress}%`;
                 }
             }
         }
@@ -739,7 +760,7 @@
         class Rose {
             constructor(isLavender = false) {
                 this.isLavender = isLavender;
-                this.image = isLavender ? lavenderRoseImage : redRoseImage;
+                this.image = isLavender ? lavenderImage : redRoseImage;
                 
                 this.calculateSize();
                 this.resetPosition(true);
@@ -763,7 +784,7 @@
 
             calculateSize() {
                 const screenSize = Math.min(canvas.width, canvas.height);
-                const sizeRange = this.isLavender ? CONFIG.lavenderRoseSize : CONFIG.redRoseSize;
+                const sizeRange = this.isLavender ? CONFIG.lavenderSize : CONFIG.redRoseSize;
                 const baseSize = screenSize * (sizeRange.min + 
                     Math.random() * (sizeRange.max - sizeRange.min));
                 
@@ -850,7 +871,7 @@
         }
 
         // ============================================
-        // INITIALIZATION
+        // INITIALIZATION WITH OPTIMIZED LOADING
         // ============================================
         async function init() {
             console.log("Starting Rose Day Gift...");
@@ -866,33 +887,33 @@
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
             
-            // Setup event listeners AFTER canvas exists
+            // Setup event listeners
             setupEventListeners();
             
-            // Initialize audio
-            initializeAudio();
-            
-            // Load images
+            // Load images first (fast)
             const imageLoader = new ImageLoader();
             const images = await imageLoader.loadAll();
             redRoseImage = images.redRose;
-            lavenderRoseImage = images.lavenderRose;
+            lavenderImage = images.lavender;
             
-            // Hide loading screen
-            setTimeout(() => {
-                const loadingScreen = document.getElementById('loading-screen');
-                if (loadingScreen) {
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                    }, 500);
-                }
-                
-                createRedRoses();
-                animate();
-                scheduleLavenderRose();
-                
-            }, 500);
+            // Hide loading screen and start game
+            hideLoadingScreen();
+            createRedRoses();
+            animate();
+            scheduleLavender();
+            
+            // Initialize audio in background (slower)
+            setTimeout(initializeAudio, 100);
+        }
+
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 300);
+            }
         }
 
         function resizeCanvas() {
@@ -926,16 +947,15 @@
             console.log(`Created ${actualCount} red roses`);
         }
 
-        function scheduleLavenderRose() {
+        function scheduleLavender() {
             if (!isGameActive || isSpawningLavender) return;
             
-            // Stop spawning if final message is ready to show
             if (finalMessageReady) {
                 return;
             }
             
-            if (lavenderRosesActive >= CONFIG.maxConcurrentLavenders) {
-                spawnTimer = setTimeout(scheduleLavenderRose, 1000);
+            if (lavenderActive >= CONFIG.maxConcurrentLavenders) {
+                spawnTimer = setTimeout(scheduleLavender, 1000);
                 return;
             }
             
@@ -947,15 +967,15 @@
             spawnTimer = setTimeout(() => {
                 setTimeout(() => {
                     roses.push(new Rose(true));
-                    lavenderRosesActive++;
-                    lavenderRosesSpawned++;
+                    lavenderActive++;
+                    lavenderSpawned++;
                     
-                    console.log(`Spawned lavender rose ${lavenderRosesSpawned}, active: ${lavenderRosesActive}`);
+                    console.log(`Spawned lavender ${lavenderSpawned}, active: ${lavenderActive}`);
                     
                     isSpawningLavender = false;
                     
                     if (!finalMessageReady) {
-                        scheduleLavenderRose();
+                        scheduleLavender();
                     }
                 }, CONFIG.gapBetweenLavenders);
             }, interval);
@@ -977,8 +997,8 @@
                 
                 if (rose.isLavender && rose.hasBeenFound) {
                     roses.splice(i, 1);
-                    lavenderRosesActive--;
-                    console.log(`Removed lavender rose, active: ${lavenderRosesActive}`);
+                    lavenderActive--;
+                    console.log(`Removed lavender, active: ${lavenderActive}`);
                 }
             }
             
@@ -1005,14 +1025,14 @@
                         // This is the 7th "I Love You" click
                         finalMessageReady = true;
                         
-                        // Switch audio from 1 to 2
+                        // Switch audio from 1 to 2 (Audio 2 starts from beginning)
                         if (isAudio1Playing) {
                             audio1.pause();
                             isAudio1Playing = false;
                         }
                         
-                        if (!isMuted) {
-                            audio2.currentTime = 0;
+                        if (!isMuted && audio2.readyState >= 3) {
+                            audio2.currentTime = AUDIO_CONFIG.audio2.startTime; // 0 - from beginning
                             audio2.play();
                             isAudio2Playing = true;
                         }
@@ -1022,7 +1042,7 @@
                     } else {
                         // Continue the game
                         isGameActive = true;
-                        scheduleLavenderRose();
+                        scheduleLavender();
                     }
                 });
             }
@@ -1055,7 +1075,7 @@
                     showMessage(nextMessageIndex);
                     
                     // Update found count display
-                    document.getElementById('lavender-roses-found').textContent = nextMessageIndex + 1;
+                    document.getElementById('lavender-found').textContent = nextMessageIndex + 1;
                     
                     console.log(`Found message ${nextMessageIndex + 1}`);
                     
@@ -1087,9 +1107,8 @@
             nextMessageIndex++;
             
             // Check if this is the 7th message
-            if (nextMessageIndex >= CONFIG.lavenderRoseCount) {
+            if (nextMessageIndex >= CONFIG.lavenderCount) {
                 allMessagesFound = true;
-                // Don't show final message yet - wait for "I Love You" click
                 console.log("All messages found! Waiting for final click...");
             }
         }
@@ -1124,11 +1143,11 @@
             
             // Reset all game state
             nextMessageIndex = 0;
-            lavenderRosesActive = 0;
-            lavenderRosesSpawned = 0;
+            lavenderActive = 0;
+            lavenderSpawned = 0;
             allMessagesFound = false;
             finalMessageReady = false;
-            document.getElementById('lavender-roses-found').textContent = '0';
+            document.getElementById('lavender-found').textContent = '0';
             
             roses = [];
             
@@ -1136,8 +1155,8 @@
             isSpawningLavender = false;
             
             // Restart audio 1
-            if (!isMuted) {
-                audio1.currentTime = 0;
+            if (!isMuted && audio1.readyState >= 3) {
+                audio1.currentTime = AUDIO_CONFIG.audio1.startTime;
                 audio1.play();
                 isAudio1Playing = true;
             }
@@ -1145,7 +1164,7 @@
             createRedRoses();
             setTimeout(() => {
                 isGameActive = true;
-                scheduleLavenderRose();
+                scheduleLavender();
             }, 2000);
         }
 
