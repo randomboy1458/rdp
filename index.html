@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rose Day Special for My Love ❤️</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, #0a0419 0%, #1a0b2e 50%, #2d1b4e 100%);
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .header {
+            position: absolute;
+            top: 30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .title {
+            font-size: 2.8rem;
+            background: linear-gradient(45deg, #ff3366, #ff6699);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #d0b8ff;
+            opacity: 0.9;
+        }
+
+        .stats-container {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffcc00;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #b8a9ff;
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .instruction-text {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 12px 25px;
+            color: #ffccff;
+            font-size: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .brown-rose-hint {
+            color: #d2691e;
+            font-weight: bold;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #0a0419 0%, #1a0b2e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 51, 102, 0.3);
+            border-radius: 50%;
+            border-top-color: #ff3366;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #ffccff;
+            font-size: 1.2rem;
+        }
+
+        /* Message Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #1a102e 0%, #2d1b4e 100%);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            border-radius: 20px;
+            padding: 0;
+            position: relative;
+            border: 2px solid #ff3366;
+            box-shadow: 0 0 40px rgba(255, 51, 102, 0.5);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(90deg, #ff3366 0%, #ff6699 100%);
+            padding: 20px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .message-number {
+            background: white;
+            color: #ff3366;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .message-container {
+            padding: 30px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .message-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .message-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .message-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #ff3366, #ff6699);
+            border-radius: 10px;
+        }
+
+        .message-text {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #f0e6ff;
+        }
+
+        .message-text p {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .love-button {
+            background: linear-gradient(45deg, #ff3366, #ff6699);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto;
+        }
+
+        .love-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 51, 102, 0.4);
+        }
+
+        .final-modal .modal-content {
+            max-width: 600px;
+        }
+
+        .final-modal .modal-header {
+            background: linear-gradient(90deg, #ffcc00 0%, #ff9900 100%);
+        }
+
+        .final-modal .modal-title {
+            font-size: 2.2rem;
+        }
+
+        .heart {
+            color: #ff3366;
+            animation: heartbeat 1.2s infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title { font-size: 2rem; }
+            .subtitle { font-size: 1rem; }
+            .stats-container { top: 20px; right: 20px; padding: 10px 15px; }
+            .stat-value { font-size: 1.4rem; }
+            .instruction-text { font-size: 0.9rem; padding: 10px 20px; }
+            .modal-content { width: 95%; }
+        }
+
+        @media (max-width: 480px) {
+            .stats { gap: 15px; }
+            .stat-label { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loader"></div>
+        <div class="loading-text">Loading your rose garden...</div>
+    </div>
+
+    <!-- Canvas for rose shower -->
+    <div id="canvas-container">
+        <canvas id="rose-canvas"></canvas>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <h1 class="title">Rose Day Shower for You 🌹</h1>
+        <p class="subtitle">Click the special brown roses to reveal my messages</p>
+    </div>
+
+    <!-- Statistics -->
+    <div class="stats-container">
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="brown-roses-found">0</div>
+                <div class="stat-label">Found</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="brown-roses-total">7</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="instructions">
+        <div class="instruction-text">
+            Tap on the <span class="brown-rose-hint">brown roses</span> as they fall to read my messages for you
+        </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div class="modal-overlay" id="message-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <span class="message-number" id="current-message-number">1</span>
+                    Message for You
+                </h2>
+            </div>
+            <div class="message-container">
+                <div class="message-text" id="message-text">
+                    <!-- Message content will be inserted here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="love-button" id="love-button">
+                    <i class="fas fa-heart heart"></i> I Love You
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Message Modal -->
+    <div class="modal-overlay final-modal" id="final-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-star heart"></i> Happy Rose Day!
+                </h2>
+            </div>
+            <div class="message-container">
+                <div class="message-text" id="final-message-text">
+                    <!-- Final message will be inserted here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="love-button" id="restart-button">
+                    <i class="fas fa-redo heart"></i> Watch Rose Shower Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURATION - ADJUST THESE VALUES
+        // ============================================
+        const CONFIG = {
+            // Red Rose Settings
+            redRoseDensity: 0.0003, // Controls how many roses (0.0003 = ~40 roses on 1920x1080 screen)
+            redRoseSize: { min: 0.04, max: 0.08 }, // Percentage of screen width
+            
+            // Brown Rose Settings
+            brownRoseCount: 7,
+            brownRoseSize: { min: 0.06, max: 0.10 }, // Slightly larger than red roses
+            
+            // Animation Settings
+            speed: { min: 0.5, max: 2.5 }, // Pixels per frame
+            rotationSpeed: { min: -0.03, max: 0.03 },
+            wobbleAmount: { min: 0.5, max: 2.0 }, // Side-to-side movement
+            wobbleSpeed: { min: 0.02, max: 0.05 },
+            
+            // Brown Rose Spawn
+            spawnInterval: { min: 1500, max: 3000 }, // Milliseconds between brown roses
+            initialDelay: 2000, // Delay before first brown rose
+        };
+
+        // ============================================
+        // LOCAL IMAGE PATHS
+        // ============================================
+        // CHANGE THESE TO YOUR ACTUAL FILE NAMES
+        const IMAGE_PATHS = {
+            redRose: './images/red-rose.png',    // Your red rose PNG
+            brownRose: './images/brown-rose.png' // Your brown rose PNG
+        };
+
+        // ============================================
+        // MESSAGES - CUSTOMIZE THESE!
+        // ============================================
+        const MESSAGES = [
+            {
+                title: "First Thought of the Day",
+                content: "Every morning when I wake up, the first thing I think about is you. Even miles apart, you're the sunrise that colors my day..."
+            },
+            {
+                title: "Your Smile",
+                content: "I miss your smile more than you can imagine. It's the most beautiful curve that sets everything straight in my world..."
+            },
+            {
+                title: "Distance Means So Little",
+                content: "They say distance means so little when someone means so much. You've proven that to be true. Every mile between us just makes my heart grow fonder..."
+            },
+            {
+                title: "My Favorite Sound",
+                content: "Your laughter is my favorite melody. Even through video calls, it brightens my darkest days. I save every voice note you send..."
+            },
+            {
+                title: "Dreaming of You",
+                content: "Last night I dreamt we were walking together in a rose garden, hand in hand. Even in my dreams, being with you feels like home..."
+            },
+            {
+                title: "You Make Me Better",
+                content: "Being with you, even virtually, makes me want to be a better person. Your love inspires me, your patience teaches me..."
+            },
+            {
+                title: "My Forever Promise",
+                content: "No matter the distance or time, I promise to always choose you. To love you through the screens and across the miles..."
+            }
+        ];
+
+        const FINAL_MESSAGE = {
+            title: "All Roses Found! 🌹",
+            content: `My dearest love,<br><br>
+            
+            You've found all 7 special roses, and with them, pieces of my heart that are always with you.<br><br>
+            
+            Each rose represents:<br>
+            • A reason why I love you<br>
+            • A memory I cherish<br>
+            • A dream for our future<br>
+            • A promise I keep<br><br>
+            
+            Even though we're apart on this Rose Day, know that my love for you grows stronger with each passing day.<br><br>
+            
+            This virtual rose shower may end, but my love for you is eternal and ever-growing.<br><br>
+            
+            Forever yours...`
+        };
+
+        // ============================================
+        // GLOBAL VARIABLES
+        // ============================================
+        let canvas, ctx;
+        let redRoseImage, brownRoseImage;
+        let roses = [];
+        let brownRosesFound = 0;
+        let brownRosesActive = 0;
+        let isGameActive = true;
+        let animationId = null;
+        let spawnTimer = null;
+        let loadingProgress = 0;
+
+        // ============================================
+        // IMAGE LOADER WITH LOCAL FILES
+        // ============================================
+        class ImageLoader {
+            constructor() {
+                this.images = {};
+                this.loaded = 0;
+                this.total = Object.keys(IMAGE_PATHS).length;
+            }
+
+            async loadAll() {
+                const promises = [];
+                
+                for (const [name, path] of Object.entries(IMAGE_PATHS)) {
+                    promises.push(this.loadImage(name, path));
+                }
+                
+                await Promise.all(promises);
+                return this.images;
+            }
+
+            loadImage(name, path) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    
+                    img.onload = () => {
+                        this.images[name] = img;
+                        this.loaded++;
+                        loadingProgress = Math.round((this.loaded / this.total) * 100);
+                        this.updateLoadingText();
+                        resolve(img);
+                    };
+                    
+                    img.onerror = () => {
+                        console.warn(`Failed to load: ${path}`);
+                        // Create a fallback colored circle
+                        this.createFallbackImage(name);
+                        this.loaded++;
+                        loadingProgress = Math.round((this.loaded / this.total) * 100);
+                        this.updateLoadingText();
+                        resolve(this.images[name]);
+                    };
+                    
+                    img.src = path;
+                });
+            }
+
+            createFallbackImage(name) {
+                const size = 100;
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                // Draw a simple rose shape
+                ctx.fillStyle = name === 'redRose' ? '#FF3366' : '#8B4513';
+                
+                // Draw petals
+                for (let i = 0; i < 6; i++) {
+                    const angle = (i * Math.PI * 2) / 6;
+                    ctx.save();
+                    ctx.translate(size/2, size/2);
+                    ctx.rotate(angle);
+                    ctx.translate(size/4, 0);
+                    
+                    // Petal shape
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, size/6, size/3, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+                
+                // Draw center
+                ctx.fillStyle = '#FFD700';
+                ctx.beginPath();
+                ctx.arc(size/2, size/2, size/8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                const img = new Image();
+                img.src = canvas.toDataURL();
+                this.images[name] = img;
+            }
+
+            updateLoadingText() {
+                const loadingText = document.querySelector('.loading-text');
+                if (loadingText) {
+                    loadingText.textContent = `Loading roses... ${loadingProgress}%`;
+                }
+            }
+        }
+
+        // ============================================
+        // ROSE CLASS
+        // ============================================
+        class Rose {
+            constructor(isBrown = false) {
+                this.isBrown = isBrown;
+                this.image = isBrown ? brownRoseImage : redRoseImage;
+                
+                // Calculate size based on screen and random factor
+                this.calculateSize();
+                
+                // Random starting position
+                this.resetPosition(true);
+                
+                // Random animation properties
+                this.speed = this.getRandomSpeed();
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = CONFIG.rotationSpeed.min + 
+                    Math.random() * (CONFIG.rotationSpeed.max - CONFIG.rotationSpeed.min);
+                this.wobble = Math.random() * Math.PI * 2;
+                this.wobbleSpeed = CONFIG.wobbleSpeed.min + 
+                    Math.random() * (CONFIG.wobbleSpeed.max - CONFIG.wobbleSpeed.min);
+                this.wobbleAmount = CONFIG.wobbleAmount.min + 
+                    Math.random() * (CONFIG.wobbleAmount.max - CONFIG.wobbleAmount.min);
+                
+                // Brown rose specific properties
+                if (isBrown) {
+                    this.hasBeenFound = false;
+                    this.messageIndex = brownRosesActive;
+                    brownRosesActive++;
+                    this.glowPhase = Math.random() * Math.PI * 2;
+                }
+            }
+
+            calculateSize() {
+                const screenSize = Math.min(canvas.width, canvas.height);
+                const sizeRange = this.isBrown ? CONFIG.brownRoseSize : CONFIG.redRoseSize;
+                const baseSize = screenSize * (sizeRange.min + 
+                    Math.random() * (sizeRange.max - sizeRange.min));
+                
+                // If image exists, maintain aspect ratio
+                if (this.image) {
+                    const aspectRatio = this.image.width / this.image.height;
+                    this.width = baseSize;
+                    this.height = baseSize / aspectRatio;
+                } else {
+                    this.width = this.height = baseSize;
+                }
+            }
+
+            getRandomSpeed() {
+                const baseSpeed = CONFIG.speed.min + 
+                    Math.random() * (CONFIG.speed.max - CONFIG.speed.min);
+                // Brown roses fall slightly slower
+                return this.isBrown ? baseSpeed * 0.8 : baseSpeed;
+            }
+
+            resetPosition(isInitial = false) {
+                if (isInitial) {
+                    this.y = -this.height - Math.random() * canvas.height * 0.5;
+                } else {
+                    this.y = -this.height;
+                }
+                this.x = Math.random() * (canvas.width - this.width);
+                
+                if (this.isBrown && !this.hasBeenFound) {
+                    this.speed = this.getRandomSpeed();
+                }
+            }
+
+            update() {
+                if (!isGameActive) return;
+                
+                // Move down
+                this.y += this.speed;
+                
+                // Wobble side to side
+                this.wobble += this.wobbleSpeed;
+                this.x += Math.sin(this.wobble) * this.wobbleAmount;
+                
+                // Rotate
+                this.rotation += this.rotationSpeed;
+                
+                // Brown rose glow effect
+                if (this.isBrown && !this.hasBeenFound) {
+                    this.glowPhase += 0.05;
+                }
+                
+                // Reset if off screen
+                if (this.y > canvas.height + this.height) {
+                    this.resetPosition();
+                }
+            }
+
+            draw() {
+                if (!this.image) return;
+                
+                ctx.save();
+                ctx.translate(this.x + this.width/2, this.y + this.height/2);
+                ctx.rotate(this.rotation);
+                
+                // Glow effect for brown roses
+                if (this.isBrown && !this.hasBeenFound) {
+                    const glow = 0.5 + Math.sin(this.glowPhase) * 0.3;
+                    ctx.shadowColor = '#FFD700';
+                    ctx.shadowBlur = 20 * glow;
+                }
+                
+                // Draw the image
+                ctx.drawImage(
+                    this.image,
+                    -this.width/2,
+                    -this.height/2,
+                    this.width,
+                    this.height
+                );
+                
+                ctx.restore();
+            }
+
+            isClicked(mouseX, mouseY) {
+                const distanceX = Math.abs(mouseX - (this.x + this.width/2));
+                const distanceY = Math.abs(mouseY - (this.y + this.height/2));
+                return distanceX < this.width/2 && distanceY < this.height/2;
+            }
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        async function init() {
+            // Setup canvas
+            canvas = document.getElementById('rose-canvas');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Load images
+            const imageLoader = new ImageLoader();
+            const images = await imageLoader.loadAll();
+            redRoseImage = images.redRose;
+            brownRoseImage = images.brownRose;
+            
+            // Hide loading screen
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+                
+                // Create initial red roses with smart density
+                createRedRoses();
+                
+                // Start animation
+                animate();
+                
+                // Start spawning brown roses
+                scheduleBrownRose();
+            }, 500);
+        }
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Recalculate rose positions if they exist
+            if (roses.length > 0) {
+                roses.forEach(rose => {
+                    rose.calculateSize();
+                    if (rose.x > canvas.width - rose.width) {
+                        rose.x = canvas.width - rose.width;
+                    }
+                });
+            }
+        }
+
+        // ============================================
+        // ROSE MANAGEMENT
+        // ============================================
+        function createRedRoses() {
+            // Calculate number of red roses based on screen area and density
+            const screenArea = canvas.width * canvas.height;
+            const targetCount = Math.floor(screenArea * CONFIG.redRoseDensity);
+            
+            // Create random number of roses (±20%)
+            const actualCount = Math.floor(
+                targetCount * (0.8 + Math.random() * 0.4)
+            );
+            
+            for (let i = 0; i < actualCount; i++) {
+                roses.push(new Rose(false));
+            }
+            
+            console.log(`Created ${actualCount} red roses (density: ${CONFIG.redRoseDensity})`);
+        }
+
+        function scheduleBrownRose() {
+            if (brownRosesActive >= CONFIG.brownRoseCount || !isGameActive) return;
+            
+            const interval = CONFIG.spawnInterval.min + 
+                Math.random() * (CONFIG.spawnInterval.max - CONFIG.spawnInterval.min);
+            
+            spawnTimer = setTimeout(() => {
+                roses.push(new Rose(true));
+                
+                if (brownRosesActive < CONFIG.brownRoseCount) {
+                    scheduleBrownRose();
+                }
+            }, interval);
+        }
+
+        // ============================================
+        // ANIMATION LOOP
+        // ============================================
+        function animate() {
+            // Clear with trail effect
+            ctx.fillStyle = 'rgba(10, 4, 25, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw all roses
+            roses.forEach(rose => {
+                rose.update();
+                rose.draw();
+            });
+            
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // ============================================
+        // EVENT HANDLERS
+        // ============================================
+        canvas.addEventListener('click', (e) => {
+            if (!isGameActive) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            for (let i = roses.length - 1; i >= 0; i--) {
+                const rose = roses[i];
+                
+                if (rose.isBrown && !rose.hasBeenFound && rose.isClicked(mouseX, mouseY)) {
+                    rose.hasBeenFound = true;
+                    brownRosesFound++;
+                    
+                    // Update UI
+                    document.getElementById('brown-roses-found').textContent = brownRosesFound;
+                    
+                    // Show message
+                    showMessage(rose.messageIndex);
+                    
+                    // Remove from display
+                    roses.splice(i, 1);
+                    
+                    // Check if all found
+                    if (brownRosesFound === CONFIG.brownRoseCount) {
+                        setTimeout(showFinalMessage, 1000);
+                    }
+                    
+                    break;
+                }
+            }
+        });
+
+        document.getElementById('love-button').addEventListener('click', () => {
+            document.getElementById('message-modal').style.display = 'none';
+            isGameActive = true;
+        });
+
+        document.getElementById('restart-button').addEventListener('click', restartGame);
+
+        function showMessage(index) {
+            isGameActive = false;
+            
+            const modal = document.getElementById('message-modal');
+            const messageNumber = document.getElementById('current-message-number');
+            const messageText = document.getElementById('message-text');
+            
+            messageNumber.textContent = index + 1;
+            messageText.innerHTML = `
+                <h3 style="color: #ff6699; margin-bottom: 15px; text-align: center;">
+                    ${MESSAGES[index].title}
+                </h3>
+                <p>${MESSAGES[index].content}</p>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function showFinalMessage() {
+            const modal = document.getElementById('final-modal');
+            const finalMessageText = document.getElementById('final-message-text');
+            
+            finalMessageText.innerHTML = `
+                <h3 style="color: #ffcc00; margin-bottom: 20px; text-align: center;">
+                    ${FINAL_MESSAGE.title}
+                </h3>
+                <p>${FINAL_MESSAGE.content}</p>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function restartGame() {
+            document.getElementById('final-modal').style.display = 'none';
+            
+            // Reset game state
+            brownRosesFound = 0;
+            brownRosesActive = 0;
+            document.getElementById('brown-roses-found').textContent = '0';
+            
+            // Clear existing roses
+            roses = [];
+            
+            // Clear spawn timer
+            if (spawnTimer) clearTimeout(spawnTimer);
+            
+            // Create new roses
+            createRedRoses();
+            setTimeout(scheduleBrownRose, CONFIG.initialDelay);
+            
+            isGameActive = true;
+        }
+
+        // ============================================
+        // START EVERYTHING
+        // ============================================
+        init();
+    </script>
+</body>
+</html>
