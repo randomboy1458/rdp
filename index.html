@@ -137,7 +137,7 @@
             height: 50px;
             border: 5px solid rgba(255, 51, 102, 0.3);
             border-radius: 50%;
-            border-top-color: #ff3366;
+            border-top-color: '#FF3366';
             animation: spin 1s ease-in-out infinite;
             margin-bottom: 20px;
         }
@@ -309,7 +309,7 @@
     <!-- Loading Screen -->
     <div class="loading-screen" id="loading-screen">
         <div class="loader"></div>
-        <div class="loading-text">Loading your rose garden...</div>
+        <div class="loading-text" id="loading-text">Preparing your rose garden...</div>
     </div>
 
     <!-- Canvas for rose shower -->
@@ -393,31 +393,30 @@
         // ============================================
         const CONFIG = {
             // Red Rose Settings
-            redRoseDensity: 0.0003, // Controls how many roses (0.0003 = ~40 roses on 1920x1080 screen)
-            redRoseSize: { min: 0.04, max: 0.08 }, // Percentage of screen width
+            redRoseDensity: 0.0003,
+            redRoseSize: { min: 0.04, max: 0.08 },
             
             // Brown Rose Settings
             brownRoseCount: 7,
-            brownRoseSize: { min: 0.06, max: 0.10 }, // Slightly larger than red roses
+            brownRoseSize: { min: 0.06, max: 0.10 },
             
             // Animation Settings
-            speed: { min: 0.5, max: 2.5 }, // Pixels per frame
+            speed: { min: 0.5, max: 2.5 },
             rotationSpeed: { min: -0.03, max: 0.03 },
-            wobbleAmount: { min: 0.5, max: 2.0 }, // Side-to-side movement
+            wobbleAmount: { min: 0.5, max: 2.0 },
             wobbleSpeed: { min: 0.02, max: 0.05 },
             
             // Brown Rose Spawn
-            spawnInterval: { min: 1500, max: 3000 }, // Milliseconds between brown roses
-            initialDelay: 2000, // Delay before first brown rose
+            spawnInterval: { min: 1500, max: 3000 },
+            initialDelay: 2000,
         };
 
         // ============================================
         // LOCAL IMAGE PATHS
         // ============================================
-        // CHANGE THESE TO YOUR ACTUAL FILE NAMES
         const IMAGE_PATHS = {
-            redRose: './images/red-rose.png',    // Your red rose PNG
-            brownRose: './images/brown-rose.png' // Your brown rose PNG
+            redRose: 'images/red-rose.png',
+            brownRose: 'images/brown-rose.png'
         };
 
         // ============================================
@@ -484,10 +483,9 @@
         let isGameActive = true;
         let animationId = null;
         let spawnTimer = null;
-        let loadingProgress = 0;
 
         // ============================================
-        // IMAGE LOADER WITH LOCAL FILES
+        // IMAGE LOADER
         // ============================================
         class ImageLoader {
             constructor() {
@@ -514,17 +512,14 @@
                     img.onload = () => {
                         this.images[name] = img;
                         this.loaded++;
-                        loadingProgress = Math.round((this.loaded / this.total) * 100);
                         this.updateLoadingText();
                         resolve(img);
                     };
                     
                     img.onerror = () => {
-                        console.warn(`Failed to load: ${path}`);
-                        // Create a fallback colored circle
+                        console.warn(`Could not load: ${path}`);
                         this.createFallbackImage(name);
                         this.loaded++;
-                        loadingProgress = Math.round((this.loaded / this.total) * 100);
                         this.updateLoadingText();
                         resolve(this.images[name]);
                     };
@@ -535,44 +530,45 @@
 
             createFallbackImage(name) {
                 const size = 100;
-                const canvas = document.createElement('canvas');
-                canvas.width = size;
-                canvas.height = size;
-                const ctx = canvas.getContext('2d');
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = size;
+                tempCanvas.height = size;
+                const tempCtx = tempCanvas.getContext('2d');
                 
                 // Draw a simple rose shape
-                ctx.fillStyle = name === 'redRose' ? '#FF3366' : '#8B4513';
+                tempCtx.fillStyle = name === 'redRose' ? '#FF3366' : '#8B4513';
                 
                 // Draw petals
                 for (let i = 0; i < 6; i++) {
                     const angle = (i * Math.PI * 2) / 6;
-                    ctx.save();
-                    ctx.translate(size/2, size/2);
-                    ctx.rotate(angle);
-                    ctx.translate(size/4, 0);
+                    tempCtx.save();
+                    tempCtx.translate(size/2, size/2);
+                    tempCtx.rotate(angle);
+                    tempCtx.translate(size/4, 0);
                     
                     // Petal shape
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, size/6, size/3, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
+                    tempCtx.beginPath();
+                    tempCtx.ellipse(0, 0, size/6, size/3, 0, 0, Math.PI * 2);
+                    tempCtx.fill();
+                    tempCtx.restore();
                 }
                 
                 // Draw center
-                ctx.fillStyle = '#FFD700';
-                ctx.beginPath();
-                ctx.arc(size/2, size/2, size/8, 0, Math.PI * 2);
-                ctx.fill();
+                tempCtx.fillStyle = '#FFD700';
+                tempCtx.beginPath();
+                tempCtx.arc(size/2, size/2, size/8, 0, Math.PI * 2);
+                tempCtx.fill();
                 
                 const img = new Image();
-                img.src = canvas.toDataURL();
+                img.src = tempCanvas.toDataURL();
                 this.images[name] = img;
             }
 
             updateLoadingText() {
-                const loadingText = document.querySelector('.loading-text');
+                const loadingText = document.getElementById('loading-text');
                 if (loadingText) {
-                    loadingText.textContent = `Loading roses... ${loadingProgress}%`;
+                    const progress = Math.round((this.loaded / this.total) * 100);
+                    loadingText.textContent = `Loading roses... ${progress}%`;
                 }
             }
         }
@@ -585,13 +581,9 @@
                 this.isBrown = isBrown;
                 this.image = isBrown ? brownRoseImage : redRoseImage;
                 
-                // Calculate size based on screen and random factor
                 this.calculateSize();
-                
-                // Random starting position
                 this.resetPosition(true);
                 
-                // Random animation properties
                 this.speed = this.getRandomSpeed();
                 this.rotation = Math.random() * Math.PI * 2;
                 this.rotationSpeed = CONFIG.rotationSpeed.min + 
@@ -602,7 +594,6 @@
                 this.wobbleAmount = CONFIG.wobbleAmount.min + 
                     Math.random() * (CONFIG.wobbleAmount.max - CONFIG.wobbleAmount.min);
                 
-                // Brown rose specific properties
                 if (isBrown) {
                     this.hasBeenFound = false;
                     this.messageIndex = brownRosesActive;
@@ -617,7 +608,6 @@
                 const baseSize = screenSize * (sizeRange.min + 
                     Math.random() * (sizeRange.max - sizeRange.min));
                 
-                // If image exists, maintain aspect ratio
                 if (this.image) {
                     const aspectRatio = this.image.width / this.image.height;
                     this.width = baseSize;
@@ -630,7 +620,6 @@
             getRandomSpeed() {
                 const baseSpeed = CONFIG.speed.min + 
                     Math.random() * (CONFIG.speed.max - CONFIG.speed.min);
-                // Brown roses fall slightly slower
                 return this.isBrown ? baseSpeed * 0.8 : baseSpeed;
             }
 
@@ -650,22 +639,15 @@
             update() {
                 if (!isGameActive) return;
                 
-                // Move down
                 this.y += this.speed;
-                
-                // Wobble side to side
                 this.wobble += this.wobbleSpeed;
                 this.x += Math.sin(this.wobble) * this.wobbleAmount;
-                
-                // Rotate
                 this.rotation += this.rotationSpeed;
                 
-                // Brown rose glow effect
                 if (this.isBrown && !this.hasBeenFound) {
                     this.glowPhase += 0.05;
                 }
                 
-                // Reset if off screen
                 if (this.y > canvas.height + this.height) {
                     this.resetPosition();
                 }
@@ -678,14 +660,12 @@
                 ctx.translate(this.x + this.width/2, this.y + this.height/2);
                 ctx.rotate(this.rotation);
                 
-                // Glow effect for brown roses
                 if (this.isBrown && !this.hasBeenFound) {
                     const glow = 0.5 + Math.sin(this.glowPhase) * 0.3;
                     ctx.shadowColor = '#FFD700';
                     ctx.shadowBlur = 20 * glow;
                 }
                 
-                // Draw the image
                 ctx.drawImage(
                     this.image,
                     -this.width/2,
@@ -708,11 +688,21 @@
         // INITIALIZATION
         // ============================================
         async function init() {
+            console.log("Starting Rose Day Gift...");
+            
             // Setup canvas
             canvas = document.getElementById('rose-canvas');
+            if (!canvas) {
+                console.error("Canvas not found!");
+                return;
+            }
+            
             ctx = canvas.getContext('2d');
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
+            
+            // Setup event listeners AFTER canvas exists
+            setupEventListeners();
             
             // Load images
             const imageLoader = new ImageLoader();
@@ -722,24 +712,27 @@
             
             // Hide loading screen
             setTimeout(() => {
-                document.getElementById('loading-screen').style.display = 'none';
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingScreen.style.display = 'none';
+                    }, 500);
+                }
                 
-                // Create initial red roses with smart density
                 createRedRoses();
-                
-                // Start animation
                 animate();
-                
-                // Start spawning brown roses
                 scheduleBrownRose();
+                
             }, 500);
         }
 
         function resizeCanvas() {
+            if (!canvas) return;
+            
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
-            // Recalculate rose positions if they exist
             if (roses.length > 0) {
                 roses.forEach(rose => {
                     rose.calculateSize();
@@ -754,20 +747,15 @@
         // ROSE MANAGEMENT
         // ============================================
         function createRedRoses() {
-            // Calculate number of red roses based on screen area and density
             const screenArea = canvas.width * canvas.height;
             const targetCount = Math.floor(screenArea * CONFIG.redRoseDensity);
-            
-            // Create random number of roses (±20%)
-            const actualCount = Math.floor(
-                targetCount * (0.8 + Math.random() * 0.4)
-            );
+            const actualCount = Math.floor(targetCount * (0.8 + Math.random() * 0.4));
             
             for (let i = 0; i < actualCount; i++) {
                 roses.push(new Rose(false));
             }
             
-            console.log(`Created ${actualCount} red roses (density: ${CONFIG.redRoseDensity})`);
+            console.log(`Created ${actualCount} red roses`);
         }
 
         function scheduleBrownRose() {
@@ -789,11 +777,11 @@
         // ANIMATION LOOP
         // ============================================
         function animate() {
-            // Clear with trail effect
+            if (!canvas) return;
+            
             ctx.fillStyle = 'rgba(10, 4, 25, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Update and draw all roses
             roses.forEach(rose => {
                 rose.update();
                 rose.draw();
@@ -805,8 +793,30 @@
         // ============================================
         // EVENT HANDLERS
         // ============================================
-        canvas.addEventListener('click', (e) => {
-            if (!isGameActive) return;
+        function setupEventListeners() {
+            // Canvas click
+            if (canvas) {
+                canvas.addEventListener('click', handleCanvasClick);
+            }
+            
+            // Love button
+            const loveButton = document.getElementById('love-button');
+            if (loveButton) {
+                loveButton.addEventListener('click', function() {
+                    document.getElementById('message-modal').style.display = 'none';
+                    isGameActive = true;
+                });
+            }
+            
+            // Restart button
+            const restartButton = document.getElementById('restart-button');
+            if (restartButton) {
+                restartButton.addEventListener('click', restartGame);
+            }
+        }
+
+        function handleCanvasClick(e) {
+            if (!isGameActive || !canvas) return;
             
             const rect = canvas.getBoundingClientRect();
             const mouseX = e.clientX - rect.left;
@@ -819,16 +829,10 @@
                     rose.hasBeenFound = true;
                     brownRosesFound++;
                     
-                    // Update UI
                     document.getElementById('brown-roses-found').textContent = brownRosesFound;
-                    
-                    // Show message
                     showMessage(rose.messageIndex);
-                    
-                    // Remove from display
                     roses.splice(i, 1);
                     
-                    // Check if all found
                     if (brownRosesFound === CONFIG.brownRoseCount) {
                         setTimeout(showFinalMessage, 1000);
                     }
@@ -836,14 +840,7 @@
                     break;
                 }
             }
-        });
-
-        document.getElementById('love-button').addEventListener('click', () => {
-            document.getElementById('message-modal').style.display = 'none';
-            isGameActive = true;
-        });
-
-        document.getElementById('restart-button').addEventListener('click', restartGame);
+        }
 
         function showMessage(index) {
             isGameActive = false;
@@ -851,6 +848,8 @@
             const modal = document.getElementById('message-modal');
             const messageNumber = document.getElementById('current-message-number');
             const messageText = document.getElementById('message-text');
+            
+            if (!modal || !messageNumber || !messageText) return;
             
             messageNumber.textContent = index + 1;
             messageText.innerHTML = `
@@ -867,6 +866,8 @@
             const modal = document.getElementById('final-modal');
             const finalMessageText = document.getElementById('final-message-text');
             
+            if (!modal || !finalMessageText) return;
+            
             finalMessageText.innerHTML = `
                 <h3 style="color: #ffcc00; margin-bottom: 20px; text-align: center;">
                     ${FINAL_MESSAGE.title}
@@ -878,20 +879,19 @@
         }
 
         function restartGame() {
-            document.getElementById('final-modal').style.display = 'none';
+            const finalModal = document.getElementById('final-modal');
+            if (finalModal) {
+                finalModal.style.display = 'none';
+            }
             
-            // Reset game state
             brownRosesFound = 0;
             brownRosesActive = 0;
             document.getElementById('brown-roses-found').textContent = '0';
             
-            // Clear existing roses
             roses = [];
             
-            // Clear spawn timer
             if (spawnTimer) clearTimeout(spawnTimer);
             
-            // Create new roses
             createRedRoses();
             setTimeout(scheduleBrownRose, CONFIG.initialDelay);
             
@@ -899,9 +899,13 @@
         }
 
         // ============================================
-        // START EVERYTHING
+        // START THE APP WHEN PAGE LOADS
         // ============================================
-        init();
+        // Wait for page to load completely
+        window.addEventListener('load', function() {
+            console.log("Page loaded, starting app...");
+            init();
+        });
     </script>
 </body>
 </html>
