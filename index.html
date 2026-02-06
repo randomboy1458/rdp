@@ -407,7 +407,7 @@
             wobbleSpeed: { min: 0.02, max: 0.05 },
             
             // Lavender Rose Spawn
-            spawnInterval: { min: 3000, max: 5000 }, // Increased interval to prevent overlap
+            spawnInterval: { min: 2000, max: 4000 }, // Balanced interval
             initialDelay: 2000,
         };
 
@@ -479,8 +479,9 @@
         let redRoseImage, lavenderRoseImage;
         let roses = [];
         let lavenderRosesFound = 0;
-        let lavenderRosesActive = 0;
-        let lavenderRosesSpawned = 0; // NEW: Track total spawned
+        let lavenderRosesActive = 0; // Currently falling lavender roses
+        let lavenderRosesSpawned = 0; // Total lavender roses created
+        let lavenderRosesMessagesFound = new Set(); // Track which messages have been found
         let isGameActive = true;
         let animationId = null;
         let spawnTimer = null;
@@ -582,7 +583,7 @@
         // ROSE CLASS
         // ============================================
         class Rose {
-            constructor(isLavender = false, messageIndex = -1) {
+            constructor(isLavender = false) {
                 this.isLavender = isLavender;
                 this.image = isLavender ? lavenderRoseImage : redRoseImage;
                 
@@ -601,11 +602,26 @@
                 
                 if (isLavender) {
                     this.hasBeenFound = false;
-                    // Use provided messageIndex or assign new one
-                    this.messageIndex = messageIndex !== -1 ? messageIndex : lavenderRosesSpawned;
+                    // Assign a unique message index that hasn't been found yet
+                    this.messageIndex = this.getRandomUnfoundMessageIndex();
                     this.glowPhase = Math.random() * Math.PI * 2;
-                    this.shouldBeRemoved = false; // NEW: Flag for removal
                 }
+            }
+
+            getRandomUnfoundMessageIndex() {
+                // Get all message indices that haven't been found yet
+                const unfoundIndices = [];
+                for (let i = 0; i < CONFIG.lavenderRoseCount; i++) {
+                    if (!lavenderRosesMessagesFound.has(i)) {
+                        unfoundIndices.push(i);
+                    }
+                }
+                
+                // If all messages have been found, return -1 (shouldn't happen)
+                if (unfoundIndices.length === 0) return -1;
+                
+                // Pick a random unfound message
+                return unfoundIndices[Math.floor(Math.random() * unfoundIndices.length)];
             }
 
             calculateSize() {
@@ -772,20 +788,37 @@
         }
 
         function scheduleLavenderRose() {
-            // Only spawn new lavender roses if we haven't reached total count
-            if (lavenderRosesSpawned >= CONFIG.lavenderRoseCount || !isGameActive) return;
+            // Don't spawn if game is not active
+            if (!isGameActive) return;
+            
+            // Don't spawn if all lavender roses are already falling
+            if (lavenderRosesActive >= 3) { // Limit concurrent lavender roses to 3
+                spawnTimer = setTimeout(scheduleLavenderRose, 1000);
+                return;
+            }
+            
+            // Don't spawn if we've already found all messages
+            if (lavenderRosesMessagesFound.size >= CONFIG.lavenderRoseCount) {
+                return;
+            }
             
             const interval = CONFIG.spawnInterval.min + 
                 Math.random() * (CONFIG.spawnInterval.max - CONFIG.spawnInterval.min);
             
             spawnTimer = setTimeout(() => {
-                // Create new lavender rose with next message index
-                roses.push(new Rose(true, lavenderRosesSpawned));
-                lavenderRosesSpawned++;
-                lavenderRosesActive++;
+                // Create new lavender rose
+                const newLavenderRose = new Rose(true);
                 
-                // Schedule next lavender rose if needed
-                if (lavenderRosesSpawned < CONFIG.lavenderRoseCount) {
+                // Check if this rose has a valid message index (not -1)
+                if (newLavenderRose.messageIndex !== -1) {
+                    roses.push(newLavenderRose);
+                    lavenderRosesActive++;
+                    lavenderRosesSpawned++;
+                    console.log(`Spawned lavender rose with message ${newLavenderRose.messageIndex + 1}`);
+                }
+                
+                // Continue scheduling more lavender roses if needed
+                if (lavenderRosesMessagesFound.size < CONFIG.lavenderRoseCount) {
                     scheduleLavenderRose();
                 }
             }, interval);
@@ -809,6 +842,8 @@
                 // Remove lavender roses that were clicked
                 if (rose.isLavender && rose.hasBeenFound) {
                     roses.splice(i, 1);
+                    lavenderRosesActive--;
+                    console.log(`Removed lavender rose, active: ${lavenderRosesActive}`);
                 }
             }
             
@@ -830,6 +865,8 @@
                 loveButton.addEventListener('click', function() {
                     document.getElementById('message-modal').style.display = 'none';
                     isGameActive = true;
+                    // Resume lavender rose spawning
+                    scheduleLavenderRose();
                 });
             }
             
@@ -854,11 +891,13 @@
                     rose.hasBeenFound = true;
                     lavenderRosesFound++;
                     
+                    // Mark this message as found
+                    lavenderRosesMessagesFound.add(rose.messageIndex);
+                    
                     document.getElementById('lavender-roses-found').textContent = lavenderRosesFound;
                     showMessage(rose.messageIndex);
                     
-                    // Don't remove immediately - let the animation loop remove it
-                    // This allows the rose to be marked as found and removed on next frame
+                    console.log(`Found message ${rose.messageIndex + 1}, total found: ${lavenderRosesFound}`);
                     
                     if (lavenderRosesFound === CONFIG.lavenderRoseCount) {
                         setTimeout(showFinalMessage, 1000);
@@ -911,9 +950,11 @@
                 finalModal.style.display = 'none';
             }
             
+            // Reset all game state
             lavenderRosesFound = 0;
             lavenderRosesActive = 0;
             lavenderRosesSpawned = 0;
+            lavenderRosesMessagesFound.clear();
             document.getElementById('lavender-roses-found').textContent = '0';
             
             roses = [];
@@ -921,9 +962,10 @@
             if (spawnTimer) clearTimeout(spawnTimer);
             
             createRedRoses();
-            setTimeout(scheduleLavenderRose, CONFIG.initialDelay);
-            
-            isGameActive = true;
+            setTimeout(() => {
+                isGameActive = true;
+                scheduleLavenderRose();
+            }, CONFIG.initialDelay);
         }
 
         // ============================================
