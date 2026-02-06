@@ -392,8 +392,8 @@
         // CONFIGURATION - ADJUST THESE VALUES
         // ============================================
         const CONFIG = {
-            // Red Rose Settings
-            redRoseDensity: 0.0003,
+            // Red Rose Settings - CHANGED: Reduced density by 50%
+            redRoseDensity: 0.00015,
             redRoseSize: { min: 0.04, max: 0.08 },
             
             // Brown Rose Settings
@@ -831,7 +831,10 @@
                     
                     document.getElementById('brown-roses-found').textContent = brownRosesFound;
                     showMessage(rose.messageIndex);
-                    roses.splice(i, 1);
+                    
+                    // CHANGED: Instead of removing, make it fall again
+                    rose.resetPosition();
+                    rose.hasBeenFound = false;
                     
                     if (brownRosesFound === CONFIG.brownRoseCount) {
                         setTimeout(showFinalMessage, 1000);
